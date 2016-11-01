@@ -12,6 +12,13 @@ var config = {
     filename: 'bundle.js'
   },
   module: {
+    preLoaders: [
+      {
+        test: /\.jsx?$/,
+        loader: 'standard',
+        exclude: /(node_modules)/
+      }
+    ],
     loaders: [
       {
         test: /\.jsx?/,
@@ -19,6 +26,9 @@ var config = {
         loader: 'babel'
       }
     ]
+  },
+  standard: {
+    parser: 'babel-eslint'
   },
   plugins: [
     new HtmlWebpackPlugin({
