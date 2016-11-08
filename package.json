@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/ftassi/trello-burndown#readme",
   "dependencies": {
-    "d3": "4.3.0",
+    "d3": "3.5.17",
+    "rd3": "0.7.2",
     "react": "15.3.2",
     "react-dom": "15.3.2"
   },
@@ -32,7 +33,7 @@
     "html-loader": "0.4.4",
     "html-webpack-plugin": "2.24.1",
     "webpack": "1.13.3",
-	"webpack-dev-server": "1.16.2",
+    "webpack-dev-server": "1.16.2",
     "standard": "8.5.0",
     "standard-loader": "5.0.0"
   }
