@@ -7,6 +7,7 @@ module.exports = function (config) {
     frameworks: [ 'mocha', 'sinon-chai' ],
 
     files: [
+      'node_modules/babel-polyfill/dist/polyfill.js',
       'karma.test.js'
     ],
 
@@ -50,20 +51,25 @@ module.exports = function (config) {
       devtool: 'inline-source-map',
 
       module: {
-        loaders: [ {
-          test: /\.js$/,
-          loader: 'babel-loader',
-        }, {
-          test: /\.html$/,
-          loader: 'html'
-        }, {
-          test: /\.json$/,
-          loader: 'json'
-        } ]
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader'
+          }, {
+            test: /\.html$/,
+            loader: 'html'
+          }, {
+            test: /\.json$/,
+            loader: 'json'
+          }, {
+            test: /\.jsx?/,
+            loader: 'babel'
+          }
+        ]
       },
       stats: {
         colors: true
       }
-    },
+    }
   })
 }
