@@ -12,7 +12,8 @@ class TrelloBoardSelector extends React.Component {
     this.state = {
       boards: [],
       allBoards: [],
-      filter: ''
+      filter: '',
+      selectedBoard: {}
     }
 
     window.Trello.get(
@@ -27,6 +28,7 @@ class TrelloBoardSelector extends React.Component {
     )
 
     this.filter = this.filter.bind(this)
+    this.selectBoard = this.selectBoard.bind(this)
   }
 
   filter (event) {
@@ -36,12 +38,16 @@ class TrelloBoardSelector extends React.Component {
     })
   }
 
+  selectBoard (board) {
+    this.setState({selectedBoard: board})
+  }
+
   render () {
     let boards = []
     this.state.boards.forEach((board) => {
       boards.push(
-        <Chip style={{ margin: 4 }} key={board.id} backgroundColor={board.prefs.backgroundColor}>
-          <Avatar color='#444' icon={<SvgIconLabelOutline />} />
+        <Chip style={{ margin: 4 }} key={board.id} backgroundColor={board.prefs.backgroundColor} onTouchTap={() => this.selectBoard(board)}>
+          <Avatar color={board.prefs.backgroundColor} icon={<SvgIconLabelOutline />} />
           {board.name}
         </Chip>
       )
@@ -49,7 +55,7 @@ class TrelloBoardSelector extends React.Component {
 
     return (
       <div>
-        <h1>Select a board</h1>
+        <h1>{this.state.selectedBoard.name ? '"' + this.state.selectedBoard.name + '"' + ' selected' : 'Select a board'}</h1>
         <TextField hintText='Search...' value={this.state.filter} onChange={this.filter} />
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>{boards}</div>
       </div>
