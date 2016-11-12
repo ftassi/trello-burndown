@@ -1,6 +1,10 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import { BurnDownChart } from './components/BurnDownChart.jsx'
+
+injectTapEventPlugin()
 
 const lineData = [
   {
@@ -10,4 +14,9 @@ const lineData = [
   }
 ]
 
-render(<BurnDownChart data={lineData} storyPoints={40} iterations={4} />, document.getElementById('app'))
+ReactDOM.render(
+  <MuiThemeProvider>
+    <BurnDownChart data={lineData} storyPoints={40} iterations={4} />
+  </MuiThemeProvider>,
+  document.getElementById('app')
+)
