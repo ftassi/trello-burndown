@@ -6,6 +6,7 @@ var BUILD_DIR = path.resolve(__dirname, 'src/client/public')
 var APP_DIR = path.resolve(__dirname, 'src/client/app')
 
 var config = {
+  devtool: 'eval-source-map',
   entry: ['babel-polyfill', APP_DIR + '/index.jsx'],
   output: {
     path: BUILD_DIR,
