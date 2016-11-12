@@ -10,4 +10,4 @@ const lineData = [
   }
 ]
 
-render(<BurnDownChart data={lineData} />, document.getElementById('app'))
+render(<BurnDownChart data={lineData} storyPoints={40} iterations={4} />, document.getElementById('app'))
