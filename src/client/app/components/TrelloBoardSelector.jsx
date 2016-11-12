@@ -2,6 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import Chip from 'material-ui/Chip'
 import Avatar from 'material-ui/Avatar'
+import TextField from 'material-ui/TextField'
 import SvgIconLabelOutline from 'material-ui/svg-icons/action/label-outline'
 
 class TrelloBoardSelector extends React.Component {
@@ -9,20 +10,33 @@ class TrelloBoardSelector extends React.Component {
     super(props)
 
     this.state = {
-      boards: []
+      boards: [],
+      allBoards: [],
+      filter: ''
     }
 
     window.Trello.get(
       '/members/me/boards/',
       (boards) => {
         this.setState({ boards: boards.map((board) => _.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ])) })
+        this.setState({
+          allBoards: this.state.boards.slice()
+        })
       },
       () => { console.log('Failed to load boards') }
     )
+
+    this.filter = this.filter.bind(this)
+  }
+
+  filter (event) {
+    this.setState({ filter: event.target.value })
+    this.setState({
+      boards: _.filter(this.state.allBoards, (board) => board.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    })
   }
 
   render () {
-    console.log(this.state.boards)
     let boards = []
     this.state.boards.forEach((board) => {
       boards.push(
@@ -36,6 +50,7 @@ class TrelloBoardSelector extends React.Component {
     return (
       <div>
         <h1>Select a board</h1>
+        <TextField hintText='Search...' value={this.state.filter} onChange={this.filter} />
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>{boards}</div>
       </div>
     )
