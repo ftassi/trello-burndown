@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import moment from 'moment'
-require('moment-range')
 import { Trello } from './Trello'
+require('moment-range')
 
 const boardFactory = (boardData) => {
   let board = _.extend({
@@ -36,8 +36,58 @@ const getSprintDays = (boardId) => () => Trello.getAcceptedListFrom(boardId)
     return days
   })
 
-const getBurnDown = (boardId) => () => new Promise((resolve) => {
-  resolve([ { x: 0, y: 40 }, { x: 1, y: 40 }, { x: 2, y: 32 }, { x: 3, y: 27 } ])
+const getBurnDown = (boardId) => (storyPoints) => new Promise((resolve) => {
+  Trello.getAcceptedListFrom(boardId).then((list) => {
+    window.Trello.get(
+      '/lists/' + list.id + '/actions',
+      (actions) => {
+        const moveActions = _.filter(actions, (action) => {
+          return action.data.listAfter
+        })
+
+        const normalizedActions = _.map(moveActions, (action) => {
+          return {
+            date: moment(action.date).startOf('day'),
+            card: action.data.card.name,
+            listAfter: action.data.listAfter,
+            listBefore: action.data.listBefore
+          }
+        })
+
+        resolve([ ...calculateBurnDownFrom(normalizedActions, storyPoints) ])
+      }
+    )
+  })
 })
+
+function calculateBurnDownFrom (actions, storyPoints) {
+  const sorted = actions
+    .sort(function (prev, next) {
+      return prev.date.diff(next.date)
+    })
+    .map((action) => {
+      const splitTitle = action.card.match(/- (\d*)/)
+      const points = splitTitle ? Number(splitTitle[1]) : 0
+      return [action.date.format(), points]
+    })
+    .reduce((completed, card) => {
+      if (card[0] in completed) {
+        completed[card[0]] -= card[1]
+      } else {
+        completed[card[0]] = storyPoints
+      }
+
+      storyPoints -= card[1]
+
+      return completed
+    }, {})
+
+  let current = 0
+  return _.map(sorted, (item, index) => {
+    const chartItem = {x: current, y: item}
+    current++
+    return chartItem
+  })
+}
 
 export { boardFactory as Board }

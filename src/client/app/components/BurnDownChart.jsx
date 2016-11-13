@@ -14,14 +14,13 @@ class BurnDownChart extends React.Component {
 
     props.board.getStoryPoints().then((storyPoints) => {
       this.setState({ storyPoints: storyPoints })
+      props.board.getBurnDown(storyPoints).then((burnDown) => {
+        this.setState({burnDown: burnDown})
+      })
     })
 
     props.board.getSprintDays().then((days) => {
       this.setState({ days: days })
-    })
-
-    props.board.getBurnDown().then((burnDown) => {
-      this.setState({burnDown: burnDown})
     })
   }
 
