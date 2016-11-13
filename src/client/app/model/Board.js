@@ -6,7 +6,8 @@ import { Trello } from './Trello'
 const boardFactory = (boardData) => {
   let board = _.extend({
     getStoryPoints: getStoryPoints(boardData.id),
-    getSprintDays: getSprintDays(boardData.id)
+    getSprintDays: getSprintDays(boardData.id),
+    getBurnDown: getBurnDown(boardData.id)
   }, boardData)
 
   return board
@@ -34,5 +35,9 @@ const getSprintDays = (boardId) => () => Trello.getAcceptedListFrom(boardId)
 
     return days
   })
+
+const getBurnDown = (boardId) => () => new Promise((resolve) => {
+  resolve([ { x: 0, y: 40 }, { x: 1, y: 40 }, { x: 2, y: 32 }, { x: 3, y: 27 } ])
+})
 
 export { boardFactory as Board }

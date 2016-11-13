@@ -8,15 +8,20 @@ class BurnDownChart extends React.Component {
 
     this.state = {
       storyPoints: 0,
-      days: 0
+      days: 0,
+      burnDown: []
     }
 
     props.board.getStoryPoints().then((storyPoints) => {
-      this.setState({storyPoints: storyPoints})
+      this.setState({ storyPoints: storyPoints })
     })
 
     props.board.getSprintDays().then((days) => {
-      this.setState({days: days})
+      this.setState({ days: days })
+    })
+
+    props.board.getBurnDown().then((burnDown) => {
+      this.setState({burnDown: burnDown})
     })
   }
 
@@ -28,7 +33,11 @@ class BurnDownChart extends React.Component {
         strokeWidth: 1,
         strokeDashArray: '5,5'
       },
-      ...burnDown(this.props.board)
+      {
+        name: 'Remaining effort',
+        strokeWidth: 3,
+        values: this.state.burnDown
+      }
     ]
 
     return <LineChart
@@ -67,16 +76,6 @@ function* idealBurnDown (days, storyPoints) {
     leftStoryPoints -= idealBurnDownPerIteration
     current++
   }
-}
-
-function burnDown (board) {
-  return [
-    {
-      name: 'Remaining effort',
-      strokeWidth: 3,
-      values: [ { x: 0, y: 40 }, { x: 1, y: 40 }, { x: 2, y: 32 } ]
-    }
-  ]
 }
 
 export { BurnDownChart, idealBurnDown }
