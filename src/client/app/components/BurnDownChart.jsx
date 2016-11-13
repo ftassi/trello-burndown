@@ -59,7 +59,7 @@ function* idealBurnDown (iterations, storyPoints) {
   }
 }
 
-function burnDown(board) {
+function burnDown (board) {
   return [
     {
       name: 'Remaining effort',

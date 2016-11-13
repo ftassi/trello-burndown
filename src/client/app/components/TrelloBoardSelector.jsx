@@ -4,6 +4,7 @@ import Chip from 'material-ui/Chip'
 import Avatar from 'material-ui/Avatar'
 import TextField from 'material-ui/TextField'
 import SvgIconLabelOutline from 'material-ui/svg-icons/action/label-outline'
+import { Trello } from './../model/Trello'
 
 class TrelloBoardSelector extends React.Component {
   constructor (props) {
@@ -15,16 +16,14 @@ class TrelloBoardSelector extends React.Component {
       filter: ''
     }
 
-    window.Trello.get(
-      '/members/me/boards/',
-      (boards) => {
+    Trello
+      .getMyBoards()
+      .then((boards) => {
         this.setState({
           boards: boards.map((board) => _.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ]))
         })
         this.setState({ filteredBoards: this.state.boards.slice() })
-      },
-      () => { console.log('Failed to load filteredBoards') }
-    )
+      })
 
     this.filter = this.filter.bind(this)
     this.selectBoard = this.selectBoard.bind(this)
