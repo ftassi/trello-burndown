@@ -10,20 +10,20 @@ class TrelloBoardSelector extends React.Component {
     super(props)
 
     this.state = {
+      filteredBoards: [],
       boards: [],
-      allBoards: [],
-      filter: '',
+      filter: ''
     }
 
     window.Trello.get(
       '/members/me/boards/',
       (boards) => {
-        this.setState({ boards: boards.map((board) => _.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ])) })
         this.setState({
-          allBoards: this.state.boards.slice()
+          boards: boards.map((board) => _.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ]))
         })
+        this.setState({ filteredBoards: this.state.boards.slice() })
       },
-      () => { console.log('Failed to load boards') }
+      () => { console.log('Failed to load filteredBoards') }
     )
 
     this.filter = this.filter.bind(this)
@@ -33,7 +33,7 @@ class TrelloBoardSelector extends React.Component {
   filter (event) {
     this.setState({ filter: event.target.value })
     this.setState({
-      boards: _.filter(this.state.allBoards, (board) => board.name.toLowerCase().includes(event.target.value.toLowerCase()))
+      filteredBoards: _.filter(this.state.boards, (board) => board.name.toLowerCase().includes(event.target.value.toLowerCase()))
     })
   }
 
@@ -43,9 +43,10 @@ class TrelloBoardSelector extends React.Component {
 
   render () {
     let boards = []
-    this.state.boards.forEach((board) => {
+    this.state.filteredBoards.forEach((board) => {
       boards.push(
-        <Chip style={{ margin: 4 }} key={board.id} backgroundColor={board.prefs.backgroundColor} onTouchTap={() => this.selectBoard(board)}>
+        <Chip style={{ margin: 4 }} key={board.id} backgroundColor={board.prefs.backgroundColor}
+          onTouchTap={() => this.selectBoard(board)}>
           <Avatar color={board.prefs.backgroundColor} icon={<SvgIconLabelOutline />} />
           {board.name}
         </Chip>
