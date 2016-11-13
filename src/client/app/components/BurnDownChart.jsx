@@ -13,7 +13,7 @@ class BurnDownChart extends React.Component {
           strokeWidth: 1,
           strokeDashArray: '5,5'
         },
-        ...props.data
+        ...burnDown(props.board)
       ]
     }
   }
@@ -42,7 +42,7 @@ class BurnDownChart extends React.Component {
 }
 
 BurnDownChart.propTypes = {
-  data: React.PropTypes.array.isRequired,
+  board: React.PropTypes.object.isRequired,
   iterations: React.PropTypes.number.isRequired,
   storyPoints: React.PropTypes.number.isRequired
 }
@@ -57,6 +57,16 @@ function* idealBurnDown (iterations, storyPoints) {
     leftStoryPoints -= idealBurnDownPerIteration
     currentIteration++
   }
+}
+
+function burnDown(board) {
+  return [
+    {
+      name: 'Remaining effort',
+      strokeWidth: 3,
+      values: [ { x: 0, y: 40 }, { x: 1, y: 40 }, { x: 2, y: 32 } ]
+    }
+  ]
 }
 
 export { BurnDownChart, idealBurnDown }
