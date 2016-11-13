@@ -24,7 +24,7 @@ class TrelloBurnDown extends React.Component {
     return (
       <div>
         { boardSelected
-          ? (<BurnDownChart board={this.state.board} iterations={4} storyPoints={40} />)
+          ? (<BurnDownChart board={this.state.board} />)
           : (<TrelloBoardSelector onSelectBoard={this.selectBoard} />)
         }
       </div>

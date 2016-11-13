@@ -5,24 +5,36 @@ class BurnDownChart extends React.Component {
 
   constructor (props) {
     super(props)
+
     this.state = {
-      data: [
-        {
-          name: 'Ideal burn down chart',
-          values: [ ...idealBurnDown(props.iterations, props.storyPoints) ],
-          strokeWidth: 1,
-          strokeDashArray: '5,5'
-        },
-        ...burnDown(props.board)
-      ]
+      storyPoints: 0,
+      days: 0
     }
+
+    props.board.getStoryPoints().then((storyPoints) => {
+      this.setState({storyPoints: storyPoints})
+    })
+
+    props.board.getIterations().then((days) => {
+      this.setState({days: days})
+    })
   }
 
   render () {
+    const data = [
+      {
+        name: 'Ideal burn down chart',
+        values: [ ...idealBurnDown(this.state.days, this.state.storyPoints) ],
+        strokeWidth: 1,
+        strokeDashArray: '5,5'
+      },
+      ...burnDown(this.props.board)
+    ]
+
     return <LineChart
       circleRadius={3}
       legend
-      data={this.state.data}
+      data={data}
       width='100%'
       height={400}
       viewBoxObject={{
@@ -33,7 +45,7 @@ class BurnDownChart extends React.Component {
       }}
       title='Burn down chart'
       yAxisLabel='Remaining effort (story points)'
-      xAxisLabel='Iteration'
+      xAxisLabel='Days'
       domain={{ x: [], y: [] }}
       gridHorizontal
       gridVertical
@@ -42,20 +54,18 @@ class BurnDownChart extends React.Component {
 }
 
 BurnDownChart.propTypes = {
-  board: React.PropTypes.object.isRequired,
-  iterations: React.PropTypes.number.isRequired,
-  storyPoints: React.PropTypes.number.isRequired
+  board: React.PropTypes.object.isRequired
 }
 
-function* idealBurnDown (iterations, storyPoints) {
-  const idealBurnDownPerIteration = Math.ceil(storyPoints / iterations)
+function* idealBurnDown (days, storyPoints) {
+  const idealBurnDownPerIteration = Math.ceil(storyPoints / days)
   let leftStoryPoints = storyPoints
-  let currentIteration = 0
+  let current = 0
 
-  while (currentIteration <= iterations) {
-    yield ({ x: currentIteration, y: Math.max(0, leftStoryPoints) })
+  while (current <= days) {
+    yield ({ x: current, y: Math.max(0, leftStoryPoints) })
     leftStoryPoints -= idealBurnDownPerIteration
-    currentIteration++
+    current++
   }
 }
 

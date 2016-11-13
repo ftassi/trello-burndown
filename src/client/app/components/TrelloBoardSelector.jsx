@@ -5,6 +5,7 @@ import Avatar from 'material-ui/Avatar'
 import TextField from 'material-ui/TextField'
 import SvgIconLabelOutline from 'material-ui/svg-icons/action/label-outline'
 import { Trello } from './../model/Trello'
+import { Board } from './../model/Board'
 
 class TrelloBoardSelector extends React.Component {
   constructor (props) {
@@ -20,7 +21,7 @@ class TrelloBoardSelector extends React.Component {
       .getMyBoards()
       .then((boards) => {
         this.setState({
-          boards: boards.map((board) => _.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ]))
+          boards: boards.map((board) => Board(_.pick(board, [ 'name', 'id', 'shortLink', 'shortUrl', 'starred', 'prefs' ])))
         })
         this.setState({ filteredBoards: this.state.boards.slice() })
       })
