@@ -13,7 +13,6 @@ class TrelloBoardSelector extends React.Component {
       boards: [],
       allBoards: [],
       filter: '',
-      selectedBoard: {}
     }
 
     window.Trello.get(
@@ -39,7 +38,7 @@ class TrelloBoardSelector extends React.Component {
   }
 
   selectBoard (board) {
-    this.setState({selectedBoard: board})
+    this.props.onSelectBoard(board)
   }
 
   render () {
@@ -55,7 +54,6 @@ class TrelloBoardSelector extends React.Component {
 
     return (
       <div>
-        <h1>{this.state.selectedBoard.name ? '"' + this.state.selectedBoard.name + '"' + ' selected' : 'Select a board'}</h1>
         <TextField hintText='Search...' value={this.state.filter} onChange={this.filter} />
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>{boards}</div>
       </div>
@@ -63,4 +61,7 @@ class TrelloBoardSelector extends React.Component {
   }
 }
 
+TrelloBoardSelector.propTypes = {
+  onSelectBoard: React.PropTypes.func.isRequired
+}
 export { TrelloBoardSelector }
