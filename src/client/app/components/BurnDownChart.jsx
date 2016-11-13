@@ -15,7 +15,7 @@ class BurnDownChart extends React.Component {
       this.setState({storyPoints: storyPoints})
     })
 
-    props.board.getIterations().then((days) => {
+    props.board.getSprintDays().then((days) => {
       this.setState({days: days})
     })
   }

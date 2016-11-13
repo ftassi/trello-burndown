@@ -6,7 +6,7 @@ import { Trello } from './Trello'
 const boardFactory = (boardData) => {
   let board = _.extend({
     getStoryPoints: getStoryPoints(boardData.id),
-    getIterations: getIterations(boardData.id)
+    getSprintDays: getSprintDays(boardData.id)
   }, boardData)
 
   return board
@@ -18,7 +18,7 @@ const getStoryPoints = (boardId) => () => Trello.getTodoListFrom(boardId)
     return Number(titleParts[ 1 ])
   })
 
-const getIterations = (boardId) => () => Trello.getAcceptedListFrom(boardId)
+const getSprintDays = (boardId) => () => Trello.getAcceptedListFrom(boardId)
   .then((list) => {
     const fromTo = new RegExp(/\((\d{2}\/\d{2}\/\d{4}) - (\d{2}\/\d{2}\/\d{4})\)/)
     const dateFormat = 'DD/MM/YYYY'
@@ -29,9 +29,6 @@ const getIterations = (boardId) => () => Trello.getAcceptedListFrom(boardId)
     const range = moment.range(moment(titleParts[1], dateFormat), moment(titleParts[2], dateFormat))
 
     range.by('days', (moment) => {
-      console.log(moment.isoWeekday())
-      console.log(moment.weekday())
-      console.log(moment.format('ddd'))
       if (moment.isoWeekday() < 6) days++
     })
 
